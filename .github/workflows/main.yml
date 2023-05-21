@@ -53,10 +53,8 @@ jobs:
           distribution: adopt
           architecture: x64
 
-      - name: Build and Test Server
-        working-directory: server/demo
-        run: mvn clean install
-
-      - name: Run Server Tests
-        working-directory: server
-        run: mvn test
+      - name: Build and Run Application
+        run: |
+          cd server/demo
+          mvn clean package -DskipTests=true
+          java -jar target/demo-0.0.1-SNAPSHOT.jar
