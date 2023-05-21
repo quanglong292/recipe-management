@@ -1,0 +1,60 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test-client:
+    name: Build and Test Client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        working-directory: client/container
+        run: npm ci
+
+      - name: Build Container
+        working-directory: client/container
+        run: npm run build
+
+      - name: Install Dependencies for Form Builder
+        working-directory: client/form-builder
+        run: npm ci
+
+      - name: Build Form Builder
+        working-directory: client/form-builder
+        run: npm run build
+
+  build-and-test-server:
+    name: Build and Test Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Build and Test Server
+        working-directory: server/demo
+        run: mvn clean install
+
+      - name: Run Server Tests
+        working-directory: server
+        run: mvn test
