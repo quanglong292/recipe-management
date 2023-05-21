@@ -50,6 +50,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
+          distribution: adopt
+          architecture: x64
 
       - name: Build and Test Server
         working-directory: server/demo
