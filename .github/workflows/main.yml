@@ -41,6 +41,16 @@ jobs:
   build-and-test-server:
     name: Build and Test Server
     runs-on: ubuntu-latest
+    
+    services:
+      database:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: recipe
+          POSTGRES_PASSWORD: recipe
+          POSTGRES_DB: recipe_db
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout Repository
@@ -52,9 +62,25 @@ jobs:
           java-version: 17
           distribution: adopt
           architecture: x64
+      
+      - name: Run Docker Compose
+        run: docker-compose -f server/demo/docker-compose.yml up -d
 
       - name: Build and Run Application
         run: |
           cd server/demo
           mvn clean package -DskipTests=true
-          java -jar target/demo-0.0.1-SNAPSHOT.jar
+          
+      - name: Wait for Application to Start
+        run: |
+          echo "Waiting for application to start..."
+          sleep 30
+      
+      - name: Run Application
+        run: |
+          java -jar server/demo/target/demo-0.0.1-SNAPSHOT.jar
+
+      - name: Stop PostgreSQL Database
+        run: |
+          cd server/demo
+          docker-compose down
