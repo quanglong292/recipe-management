@@ -2,6 +2,7 @@ import "./App.css";
 import { Formik, Field, Form } from "formik";
 import { IForm } from "./types/form.type";
 import { createRecipe } from "./apis/recipe.api";
+import { notification } from "antd";
 
 const CustomInputComponent = (props: any) => {
   if (props.type === "textarea")
@@ -14,15 +15,17 @@ function App() {
   // Functions
   const handleSubmit = async (values: IForm): Promise<void> => {
     const data: any = await createRecipe(values);
-    if (data) alert("Created recipe!");
+    console.log({ handleSubmit: data });
+
+    if (data) notification.success({ message: "Success!" });
   };
 
   return (
-    <div>
-      <p className="text-2xl my-2">Creat your recipe</p>
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-800">
+      <p className="text-2xl my-2 text-white">Creat your recipe</p>
       <Formik
         initialValues={{}}
-        onSubmit={async (values: IForm) => {
+        onSubmit={async (values: any) => {
           await handleSubmit(values);
         }}
       >

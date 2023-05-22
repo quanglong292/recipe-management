@@ -1,4 +1,4 @@
-interface IForm {
+interface IRecipe {
     id: string,
     name?: string,
     serving?: number,
@@ -6,4 +6,4 @@ interface IForm {
     instruction?: string
 }
 
-export {type IForm}
+export { type IRecipe }
